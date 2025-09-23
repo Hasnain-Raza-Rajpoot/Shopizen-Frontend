@@ -1,9 +1,3 @@
-\
-"@/components/ui/cw let me create the missing admin report pages:
-
-<CodeProject id="ecommerce-platform" taskNameActive="Creating report pages" taskNameComplete="Created report pages">
-
-```tsx file="app/admin/reports/sales/page.tsx"
 import type { Metadata } from "next"
 import Link from "next/link"
 import {
