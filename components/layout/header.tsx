@@ -173,10 +173,10 @@ export function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href="/login">Sign In</Link>
+                  <Link href={`/login?returnUrl=${encodeURIComponent("/account")}`}>Sign In</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/register">Create Account</Link>
+                  <Link href={`/register?returnUrl=${encodeURIComponent("/account")}`}>Create Account</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>

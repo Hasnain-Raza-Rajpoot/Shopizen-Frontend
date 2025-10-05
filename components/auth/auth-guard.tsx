@@ -11,9 +11,10 @@ interface AuthGuardProps {
   children: React.ReactNode
   requireAuth?: boolean
   redirectTo?: string
+  requiredRole?: "admin" | "customer"
 }
 
-export function AuthGuard({ children, requireAuth = true, redirectTo = "/login" }: AuthGuardProps) {
+export function AuthGuard({ children, requireAuth = true, redirectTo = "/login", requiredRole }: AuthGuardProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const router = useRouter()
@@ -25,11 +26,19 @@ export function AuthGuard({ children, requireAuth = true, redirectTo = "/login" 
         // Simulate API call to check authentication status
         const token = localStorage.getItem("auth_token")
         const isAuth = !!token // Simple check - in real app, validate token with server
+        const userStr = localStorage.getItem("user")
+        const user = userStr ? JSON.parse(userStr) : null
 
         setIsAuthenticated(isAuth)
 
         if (requireAuth && !isAuth) {
-          router.push(redirectTo)
+          const returnUrl = window.location.pathname + window.location.search
+          router.push(`${redirectTo}?returnUrl=${encodeURIComponent(returnUrl)}`)
+          return
+        }
+
+        if (requireAuth && requiredRole && user && user.role !== requiredRole) {
+          router.push("/")
           return
         }
 
@@ -41,7 +50,8 @@ export function AuthGuard({ children, requireAuth = true, redirectTo = "/login" 
         console.error("Auth check failed:", error)
         setIsAuthenticated(false)
         if (requireAuth) {
-          router.push(redirectTo)
+          const returnUrl = window.location.pathname + window.location.search
+          router.push(`${redirectTo}?returnUrl=${encodeURIComponent(returnUrl)}`)
         }
       } finally {
         setIsLoading(false)
@@ -49,7 +59,7 @@ export function AuthGuard({ children, requireAuth = true, redirectTo = "/login" 
     }
 
     checkAuth()
-  }, [requireAuth, redirectTo, router])
+  }, [requireAuth, redirectTo, requiredRole, router])
 
   if (isLoading) {
     return (

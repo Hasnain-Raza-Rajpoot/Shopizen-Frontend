@@ -25,3 +25,30 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# coverage & test
+coverage/
+
+# additional production/build outputs
+dist/
+
+# caches
+.eslintcache
+.stylelintcache
+.turbo/
+.cache/
+.swc/
+.sass-cache/
+
+# package manager stores
+.pnpm-store/
+
+# logs directory
+logs/
+
+# editor/OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

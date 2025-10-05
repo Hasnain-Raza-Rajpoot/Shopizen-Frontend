@@ -245,7 +245,20 @@ Key features include:
               </div>
 
               <div className="flex gap-4">
-                <Button className="flex-1" size="lg" disabled={!product.inStock}>
+                <Button
+                  className="flex-1"
+                  size="lg"
+                  disabled={!product.inStock}
+                  onClick={() => {
+                    const isAuth = !!localStorage.getItem("auth_token")
+                    if (!isAuth) {
+                      const returnUrl = "/cart"
+                      window.location.href = `/login?returnUrl=${encodeURIComponent(returnUrl)}`
+                      return
+                    }
+                    window.location.href = "/cart"
+                  }}
+                >
                   <ShoppingCart className="h-5 w-5 mr-2" />
                   Add to Cart
                 </Button>

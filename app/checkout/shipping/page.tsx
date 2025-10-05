@@ -76,6 +76,11 @@ export default function CheckoutShippingPage() {
   }
 
   const handleContinue = () => {
+    const isAuth = !!localStorage.getItem("auth_token")
+    if (!isAuth) {
+      router.push(`/login?returnUrl=${encodeURIComponent("/checkout/payment")}`)
+      return
+    }
     router.push("/checkout/payment")
   }
 

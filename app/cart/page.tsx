@@ -267,7 +267,18 @@ export default function CartPage() {
                   <span>Rs. {total.toLocaleString()}</span>
                 </div>
 
-                <Button className="w-full" size="lg" onClick={() => router.push("/checkout/shipping")}>
+                <Button
+                  className="w-full"
+                  size="lg"
+                  onClick={() => {
+                    const isAuth = !!localStorage.getItem("auth_token")
+                    if (!isAuth) {
+                      router.push(`/login?returnUrl=${encodeURIComponent("/checkout/shipping")}`)
+                      return
+                    }
+                    router.push("/checkout/shipping")
+                  }}
+                >
                   <Lock className="h-4 w-4 mr-2" />
                   Proceed to Checkout
                 </Button>

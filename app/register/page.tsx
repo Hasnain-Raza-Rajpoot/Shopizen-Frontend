@@ -2,7 +2,8 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
@@ -15,6 +16,8 @@ import { Separator } from "@/components/ui/separator"
 import { Eye, EyeOff, Mail, Lock, User, Phone, Facebook, Chrome } from "lucide-react"
 
 export default function RegisterPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [formData, setFormData] = useState({
@@ -50,9 +53,17 @@ export default function RegisterPage() {
     setTimeout(() => {
       setIsLoading(false)
       console.log("Registration attempt:", { ...formData, agreeToTerms, subscribeNewsletter })
-      // Redirect to email verification or login page
+      const returnUrl = searchParams?.get("returnUrl")
+      router.push(returnUrl || "/account")
     }, 2000)
   }
+
+  useEffect(() => {
+    const isAuth = !!localStorage.getItem("auth_token")
+    if (isAuth) {
+      router.replace("/account")
+    }
+  }, [router])
 
   return (
     <div className="min-h-screen">

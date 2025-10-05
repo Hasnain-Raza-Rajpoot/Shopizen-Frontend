@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,15 @@ import { authService } from "@/lib/auth"
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  
+  // Redirect authenticated users away from login page
+  if (typeof window !== "undefined") {
+    const isAuth = !!localStorage.getItem("auth_token")
+    if (isAuth) {
+      router.replace("/account")
+    }
+  }
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -33,6 +42,11 @@ export default function LoginPage() {
       const { user } = await authService.login(email, password)
 
       // Redirect based on user role
+      const returnUrl = searchParams?.get("returnUrl")
+      if (returnUrl) {
+        router.push(returnUrl)
+        return
+      }
       if (user.role === "admin") {
         router.push("/admin")
       } else {
